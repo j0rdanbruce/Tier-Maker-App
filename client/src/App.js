@@ -1,10 +1,23 @@
+import { useEffect, useState } from 'react';
 import './App.css';
-import SortableList from './components/SortableList';
 
 function App() {
 
+  const [message, setMessage] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/sorting")
+    .then(response => response.json())
+  .then(data => {
+      setMessage(data);
+    })
+  });
+
   return (
-    <SortableList />
+    <>
+      <h1>{message && message.message}</h1>
+    </>
+    
   );
 }
 
