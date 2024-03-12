@@ -25,7 +25,11 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('disconnect', () => {
     console.log('a user disconnected');
-  })
+  });
+  socket.on('sort change event', (values) => {
+    console.log(values);
+    io.emit('sort change event', values);
+  });
 });
 
 app.get('', (req, res) => {
