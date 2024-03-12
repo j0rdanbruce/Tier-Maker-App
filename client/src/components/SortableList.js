@@ -15,6 +15,7 @@ import {
 } from '@dnd-kit/sortable';
 
 import { SortableItem } from './SortableItem';
+import { socket } from '../socket';
 
 const SortableList = () => {
   const [items, setItems] = useState([1, 2, 3]);
@@ -24,6 +25,14 @@ const SortableList = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  
+  //code block that handles the emitted event from servers.
+  //changes sortable order for all connected clients.
+  socket.on('sort change event', (values) => {
+    setItems((items) => {
+      return arrayMove(items, values.oldIndex, values.newIndex);
+    });
+  });
 
   return (
     <DndContext 
@@ -46,13 +55,13 @@ const SortableList = () => {
   
   function handleDragEnd(event) {
     const {active, over} = event;
-    
+
     if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-        
-        return arrayMove(items, oldIndex, newIndex);
+      const oldIndex = items.indexOf(active.id);
+      const newIndex = items.indexOf(over.id);
+      socket.emit('sort change event', {
+        oldIndex: oldIndex,
+        newIndex: newIndex
       });
     }
   }
