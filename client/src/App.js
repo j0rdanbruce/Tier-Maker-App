@@ -1,22 +1,36 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { socket } from './socket';
+import { ConnectionState } from './components/ConnectionState/ConnectionState';
+import { ConnectionManager } from './components/ConnectionManager/ConnectionManager';
+
 import './App.css';
 
 function App() {
-
-  const [message, setMessage] = useState(null);
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    fetch("http://localhost:8000/sorting")
-    .then(response => response.json())
-  .then(data => {
-      setMessage(data);
-    })
-  });
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, []);
 
   return (
-    <>
-      <h1>{message && message.message}</h1>
-    </>
+    <div className="App">
+      <ConnectionState isConnected={isConnected} />
+      <ConnectionManager />
+    </div>
     
   );
 }
