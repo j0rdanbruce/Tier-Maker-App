@@ -14,6 +14,7 @@ import {
 
 import { Container } from './Container';
 import { socket } from '../socket';
+import { array } from 'prop-types';
 
 const SortableList = () => {
   const [activeId, setActiveId] = useState(null);
@@ -31,13 +32,13 @@ const SortableList = () => {
   
   //code block that handles the emitted event from servers.
   //changes sortable order for all connected clients.
-  /*
+  
   socket.on('sort change event', (values) => {
-    setItems((items) => {
-      return arrayMove(items, values.oldIndex, values.newIndex);
-    });
+    setItems((items) => ({
+      ...items,
+      [values.container]: arrayMove(items[values.container], values.oldIndex, values.newIndex)
+    }));
   });
-*/
 
   return (
     <DndContext 
@@ -118,11 +119,13 @@ const SortableList = () => {
   
   function handleDragEnd(event) {
     const {active, over} = event;
+    const activeContainer = String(findContainer(active.id));
 
     if (active.id !== over.id) {
-      const oldIndex = items.indexOf(active.id);
-      const newIndex = items.indexOf(over.id);
+      const oldIndex = items[activeContainer].indexOf(active.id);
+      const newIndex = items[activeContainer].indexOf(over.id);
       socket.emit('sort change event', {
+        container: activeContainer,
         oldIndex: oldIndex,
         newIndex: newIndex
       });
