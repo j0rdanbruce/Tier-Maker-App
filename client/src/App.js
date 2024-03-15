@@ -8,7 +8,6 @@ import './App.css';
 
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [userCount, setUserCount] = useState(0);
 
   useEffect(() => {
     function onConnect() {
@@ -35,8 +34,13 @@ function App() {
     <div className="App">
       <ConnectionState isConnected={isConnected} />
       <ConnectionManager />
+      
       <SortableList />
       <p id='info'>Here</p>
+      <h2>Add Portion</h2>
+      <div>
+        <button>Add Item</button>
+      </div>
     </div>
     
   );
