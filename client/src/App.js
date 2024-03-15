@@ -1,64 +1,49 @@
-import './App.css';
-import React, {useState} from 'react';
-import {
-  DndContext, 
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-
-import {SortableItem} from './components/SortableItem';
+import React, { useEffect, useState } from 'react';
+import { socket } from './socket';
+import { ConnectionState } from './components/ConnectionState/ConnectionState';
+import { ConnectionManager } from './components/ConnectionManager/ConnectionManager';
+import SortableList from './components/SortableList';
 
 import './App.css';
 
 function App() {
-  const [items, setItems] = useState([1, 2, 3]);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const [isConnected, setIsConnected] = useState(socket.connected);
+
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('sort change event', (values) => {
+      document.getElementById('info').innerText = JSON.stringify(values);
+    });
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, []);
 
   return (
-    <DndContext 
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext 
-        items={items}
-        strategy={verticalListSortingStrategy}
-      >
-        {items.map((id) => (
-          <SortableItem key={id} id={id}>
-            {id}
-          </SortableItem>
-        ))}
-      </SortableContext>
-    </DndContext>
-  );
-  
-  function handleDragEnd(event) {
-    const {active, over} = event;
+    <div className="App">
+      <ConnectionState isConnected={isConnected} />
+      <ConnectionManager />
+      
+      <SortableList />
+      <p id='info'>Here</p>
+      <h2>Add Portion</h2>
+      <div>
+        <button>Add Item</button>
+      </div>
+    </div>
     
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-        
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  }
+  );
 }
 
 export default App;
