@@ -14,14 +14,13 @@ import {
 
 import { Container } from './Container';
 import { socket } from '../socket';
-import { array } from 'prop-types';
 
 const SortableList = () => {
   const [activeId, setActiveId] = useState(null);
   const [items, setItems] = useState({
-    'root': [1, 2, 3],
-    'A': [4, 5, 6],
-    'B': [7, 8, 9]
+    'root': [1, 2, 3, 4, 5, 6],
+    'A': [],
+    'B': []
   });
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -32,11 +31,31 @@ const SortableList = () => {
   
   //code block that handles the emitted event from servers.
   //changes sortable order for all connected clients.
-  
-  socket.on('sort change event', (values) => {
+  socket.on('sort different container', (values) => {
+    const {
+      activeContainer,
+      overContainer,
+      activeContainerValue,
+      overContainerValue
+    } = values;
+    
     setItems((items) => ({
       ...items,
-      [values.container]: arrayMove(items[values.container], values.oldIndex, values.newIndex)
+      [activeContainer]: activeContainerValue,
+      [overContainer]: overContainerValue
+    }));
+  });
+
+  socket.on('sort change event', (values) => {
+    const {
+      activeContainer,
+      activeIndex,
+      overIndex
+    } = values;
+
+    setItems((prev) => ({
+      ...prev,
+      [activeContainer]: arrayMove(prev[activeContainer], activeIndex, overIndex)
     }));
   });
 
@@ -49,16 +68,16 @@ const SortableList = () => {
       onDragEnd={handleDragEnd}
     >
       <Container
-        id="root"
-        items={items.root}
-      />
-      <Container
         id="A"
         items={items.A}
       />
       <Container
         id="B"
         items={items.B}
+      />
+      <Container
+        id="root"
+        items={items.root}
       />
     </DndContext>
   );
@@ -96,40 +115,70 @@ const SortableList = () => {
       const overItems = prev[overContainer];
 
       const activeIndex = activeItems.indexOf(active.id);
-      const overIndex = overItems.indexOf(over.id);
-      socket.emit('sort change event', {
-        container: overContainer,
-        activeIndex: activeIndex,
-        overIndex: overIndex
-      });
+      const overIndex =  overItems.indexOf(over.id);
 
+      let newIndex;
+      if (over.id in prev) {
+        newIndex = overItems.length + 1;
+      } else {
+        const isToRightOfLastItem =
+          over &&
+          overIndex === overItems.length - 1
+
+        const modifier = isToRightOfLastItem ? 1 : 0;
+
+        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+        newIndex = overIndex >= 0 ? overIndex : overItems.length + 1;
+      }
+      
       return {
         ...prev,
         [activeContainer]: [
           ...prev[activeContainer].filter((item) => item !== active.id)
         ],
         [overContainer]: [
-          ...prev[overContainer].slice(0, overIndex),
+          ...prev[overContainer].slice(0, newIndex),
           items[activeContainer][activeIndex],
-          ...prev[overContainer].slice(overIndex)
+          ...prev[overContainer].slice(newIndex)
         ]
       };
     });
+    
+    socket.emit('sort different container', {
+      activeContainer: activeContainer,
+      overContainer: overContainer,
+      activeContainerValue: items[activeContainer],
+      overContainerValue: items[overContainer]
+    })
   }
   
   function handleDragEnd(event) {
     const {active, over} = event;
-    const activeContainer = String(findContainer(active.id));
+    const activeContainer = findContainer(active.id);
+    const overContainer = findContainer(over.id);
 
-    if (active.id !== over.id) {
-      const oldIndex = items[activeContainer].indexOf(active.id);
-      const newIndex = items[activeContainer].indexOf(over.id);
-      socket.emit('sort change event', {
-        container: activeContainer,
-        oldIndex: oldIndex,
-        newIndex: newIndex
-      });
+    if (!activeContainer ||
+        !overContainer ||
+        activeContainer !== overContainer
+    ) {
+      return;
     }
+
+    const activeIndex = items[activeContainer].indexOf(active.id);
+    const overIndex = items[activeContainer].indexOf(over.id);
+
+    if (activeIndex !== overIndex) {
+      setItems((prev) => ({
+        ...prev,
+        [activeContainer]: arrayMove(prev[activeContainer], activeIndex, overIndex)
+      }));
+    }
+
+    socket.emit('sort change event', {
+      activeContainer: activeContainer,
+      activeIndex: activeIndex,
+      overIndex: overIndex
+    });
   }
 }
 
