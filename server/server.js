@@ -26,11 +26,19 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('a user disconnected');
   });
+  socket.on('sort start event', (id) => {
+    console.log(id);
+    socket.broadcast.emit('sort start event', id);
+  });
   socket.on('sort change event', (values) => {
     console.log(values);
-    io.emit('sort change event', values);
+    socket.broadcast.emit('sort change event', values);
   });
-});
+  socket.on('sort different container', (values) => {
+    console.log(values);
+    socket.broadcast.emit('sort different container', values);
+  })
+});;
 
 app.get('', (req, res) => {
   res.json({ message: "Hello from index page!" });

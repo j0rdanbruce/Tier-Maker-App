@@ -10,17 +10,21 @@ import { useDroppable } from "@dnd-kit/core";
 
 export const Container = (props) => {
   const { id, items } = props;
-  const { setNodeRef } = useDroppable({
+  const {
+    setNodeRef
+  } = useDroppable({
     id: id
   });
   const containerStyle = {
     position: 'relative',
     display: 'flex',
     flexDirection: 'row',
-    width: '600px',
+    width: '300px',
     height: '50px',
+    padding: '10px',
     marginLeft: 'auto',
     marginRight: 'auto',
+    borderStyle: 'solid',
     backgroundColor: "grey"
   };
 
