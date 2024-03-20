@@ -26,6 +26,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('a user disconnected');
   });
+  socket.on('sort start event', (id) => {
+    console.log(id);
+    socket.broadcast.emit('sort start event', id);
+  });
   socket.on('sort change event', (values) => {
     console.log(values);
     socket.broadcast.emit('sort change event', values);

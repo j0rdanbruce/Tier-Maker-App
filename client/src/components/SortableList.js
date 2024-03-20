@@ -31,26 +31,23 @@ const SortableList = () => {
   
   //code block that handles the emitted event from servers.
   //changes sortable order for all connected clients.
+    socket.on('sort start event', (id) => {
+      setActiveId(id);
+    });
+
   socket.on('sort different container', (values) => {
     const {
-      activeContainer,
-      overContainer,
-      activeContainerValue,
-      overContainerValue
+      items
     } = values;
     
-    setItems((items) => ({
-      ...items,
-      [activeContainer]: activeContainerValue,
-      [overContainer]: overContainerValue
-    }));
+    setItems(items);
   });
 
   socket.on('sort change event', (values) => {
     const {
-      activeContainer,
-      activeIndex,
-      overIndex
+      activeContainer: activeContainer,
+      activeIndex: activeIndex,
+      overIndex: overIndex
     } = values;
 
     setItems((prev) => ({
@@ -94,6 +91,7 @@ const SortableList = () => {
     const { id } = active;
 
     setActiveId(id);
+    socket.emit('sort start event', id);
   }
 
   function handleDragOver(event) {
@@ -109,6 +107,14 @@ const SortableList = () => {
     ) {
       return;
     }
+
+    /*
+    socket.emit('sort different container', {
+      active: active,
+      rect: active.rect.current,
+      over: over
+    });
+    */
 
     setItems((prev) => {
       const activeItems = prev[activeContainer];
@@ -143,13 +149,11 @@ const SortableList = () => {
         ]
       };
     });
-    
+    /*
     socket.emit('sort different container', {
-      activeContainer: activeContainer,
-      overContainer: overContainer,
-      activeContainerValue: items[activeContainer],
-      overContainerValue: items[overContainer]
-    })
+      items: items
+    });
+    */
   }
   
   function handleDragEnd(event) {
@@ -173,6 +177,10 @@ const SortableList = () => {
         [activeContainer]: arrayMove(prev[activeContainer], activeIndex, overIndex)
       }));
     }
+
+    socket.emit('sort different container', {
+      items: items
+    });
 
     socket.emit('sort change event', {
       activeContainer: activeContainer,

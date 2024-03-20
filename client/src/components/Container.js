@@ -11,8 +11,7 @@ import { useDroppable } from "@dnd-kit/core";
 export const Container = (props) => {
   const { id, items } = props;
   const {
-    setNodeRef,
-    isOver,
+    setNodeRef
   } = useDroppable({
     id: id
   });
@@ -26,7 +25,7 @@ export const Container = (props) => {
     marginLeft: 'auto',
     marginRight: 'auto',
     borderStyle: 'solid',
-    backgroundColor: isOver ? "green" : "grey"
+    backgroundColor: "grey"
   };
 
   return (
