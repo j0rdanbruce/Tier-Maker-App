@@ -13,6 +13,9 @@ import {
   Route,
 } from "react-router-dom";
 
+//Web page imports go here
+import Home from './components/Pages/Home';
+
 //Navigation Bar imports go here
 import NavigationBar from './components/NavigationBar/NavigationBar';
 
@@ -42,7 +45,12 @@ function App() {
 
   return (
     <div className="App">
-      <NavigationBar />
+      <Router>
+        <NavigationBar />
+        <Routes>
+          <Route path='/home' Component={Home} />
+        </Routes>
+      </Router>
 
       <ConnectionState isConnected={isConnected} />
       <ConnectionManager />
