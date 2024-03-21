@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import './App.css';
+
 import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState/ConnectionState';
 import { ConnectionManager } from './components/ConnectionManager/ConnectionManager';
 import SortableList from './components/SortableList';
 
-import './App.css';
+//Browser routing related imports go here
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+
+//Web page imports go here
+import Home from './components/Pages/Home';
+
+//Navigation Bar imports go here
+import NavigationBar from './components/NavigationBar/NavigationBar';
 
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -32,6 +45,16 @@ function App() {
 
   return (
     <div className="App">
+      <Router>
+        <NavigationBar />
+        <Routes>
+          <Route
+            path='/home'
+            element={<Home name="Jordan" />}
+          />
+        </Routes>
+      </Router>
+
       <ConnectionState isConnected={isConnected} />
       <ConnectionManager />
       
