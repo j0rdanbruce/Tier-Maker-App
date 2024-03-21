@@ -2,10 +2,15 @@
  * The Home Page component represent the landing page for the Tier Ranking Application.
  */
 
-const Home = () => {
-
+const Home = (props) => {
+  const { name } = props;
+  
   return (
-    <h1>Home Page</h1>
+    <div>
+      <h1>Home Page</h1>
+      <p>{`Hello, ${name}`}</p>
+    </div>
+    
   );
 }
 

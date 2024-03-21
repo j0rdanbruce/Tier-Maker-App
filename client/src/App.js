@@ -48,7 +48,10 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
-          <Route path='/home' Component={Home} />
+          <Route
+            path='/home'
+            element={<Home name="Jordan" />}
+          />
         </Routes>
       </Router>
 
