@@ -45,9 +45,9 @@ const SortableList = () => {
 
   socket.on('sort change event', (values) => {
     const {
-      activeContainer: activeContainer,
-      activeIndex: activeIndex,
-      overIndex: overIndex
+      activeContainer,
+      activeIndex,
+      overIndex
     } = values;
 
     setItems((prev) => ({
