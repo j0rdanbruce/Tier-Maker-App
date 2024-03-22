@@ -22,7 +22,10 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [rooms, setRooms] = useState({});
+  const [rooms, setRooms] = useState({
+    Room1: [],
+    Room2: []
+  });
 
   useEffect(() => {
     function onConnect() {

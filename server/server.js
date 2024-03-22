@@ -6,13 +6,14 @@ import { Server } from 'socket.io';
 const app = express();
 const server = createServer(app);
 const port = 8000;
+const socketPort = 4000;
 const io = new Server({
   cors: {
     origin: "http://localhost:3000"
   }
 });
 
-io.listen(4000);
+io.listen(socketPort);
 
 app.use(cors());
 app.use(express.json());
