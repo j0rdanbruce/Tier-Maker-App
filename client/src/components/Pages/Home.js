@@ -52,7 +52,7 @@ const CreateRoomForm = () => {
         />
         <Button
           type='submit'
-          onClick={handleCreateRoomEvent}
+          onClick={(event) => handleCreateRoomEvent(event)}
         >
           Create Room
         </Button>
@@ -60,7 +60,9 @@ const CreateRoomForm = () => {
     </Form>
   );
 
-  function handleCreateRoomEvent() {
+  function handleCreateRoomEvent(event) {
+    event.preventDefault();   //prevents the page from reloading when submitting form data.
+
     const roomName = document.getElementById('room-name').value;
     socket.emit('create', roomName);
   }
