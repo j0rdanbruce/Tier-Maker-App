@@ -3,6 +3,8 @@
  * Users will land on this page first.
  */
 
+import { useEffect } from "react";
+
 //react-boostrap imports go here
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -10,6 +12,10 @@ import Button from "react-bootstrap/Button";
 
 //react-router-dom imports go here
 import { useNavigate } from "react-router-dom";
+
+//socket imports go here
+import { socket } from "../../socket";
+
 
 /**
  * The component for the username form.
@@ -24,6 +30,7 @@ const UsernameForm = (props) => {
 
     const username = document.getElementById('username').value;
     setUsername(username);
+    socket.emit('create-custom-id', (username));
     navigate('/home');    //navigates to the home page after setting the user's username
   }
 
