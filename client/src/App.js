@@ -14,6 +14,7 @@ import {
 } from "react-router-dom";
 
 //Web page imports go here
+import Index from './components/Pages/Index';
 import Home from './components/Pages/Home';
 import RankingSession from './components/RankingSession/RankingSession';
 
@@ -21,6 +22,7 @@ import RankingSession from './components/RankingSession/RankingSession';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 
 function App() {
+  const [username, setUsername] = useState(null);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [rooms, setRooms] = useState({
     Room1: [],
@@ -54,8 +56,12 @@ function App() {
         <NavigationBar />
         <Routes>
           <Route
+            exact path='/'
+            element={<Index setUsername={setUsername} />}
+          />
+          <Route
             path='/home'
-            element={<Home name="Jordan" rooms={rooms} />}
+            element={<Home name={username} rooms={rooms} />}
           />
           <Route
             path="/rank-session"
