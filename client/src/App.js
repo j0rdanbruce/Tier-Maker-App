@@ -38,6 +38,14 @@ function App() {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
+    socket.on('create-room-event', (room) => {
+      setRooms((prev) => {
+        return {
+          ...prev,
+          [room]: []
+        };
+      });
+    });
   });
 
   return (

@@ -40,10 +40,16 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('sort different container', values);
   });
   socket.on('create', (room) => {
-    socket.join(room);
-    const rooms = Array.from(io.of("/").adapter.rooms.keys());
-    console.log(`User '${socket.id}' has created a room: ${room}`);
-    console.log(`Number of rooms: ${rooms}`);
+    try {
+      const socketId = socket.id;
+      socket.join(room);
+      const rooms = Array.from(io.of("/").adapter.rooms);
+      console.log(`User '${socket.id}' has created a room: ${room}`);
+      console.log(`Number of rooms: ${rooms}`);
+      io.emit('create-room-event', (room));
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
 
