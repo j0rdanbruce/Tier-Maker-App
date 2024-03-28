@@ -8,12 +8,24 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+//react-router-dom imports go here
+import { useNavigate } from "react-router-dom";
+
 /**
  * The component for the username form.
  */
 
 const UsernameForm = (props) => {
   const { setUsername } = props;
+  const navigate = useNavigate();
+
+  const handleUsernameFormSubmission = (event) => {
+    event.preventDefault();   //prevents the broswer page from reloading and disconnecting the socket from the server
+
+    const username = document.getElementById('username').value;
+    setUsername(username);
+    navigate('/home');    //navigates to the home page after setting the user's username
+  }
 
   return (
     <Form>
@@ -22,20 +34,13 @@ const UsernameForm = (props) => {
         <Form.Control type="text" placeholder="E.g: TierMaster96" />
         <Button
           type="submit"
-          onClick={(event) => handleUsernameFormSubmission(event)}
+          onClick={handleUsernameFormSubmission}
         >
           Submit
         </Button>
       </Form.Group>
     </Form>
   );
-
-  function handleUsernameFormSubmission(event) {
-    event.preventDefault();
-
-    const username = document.getElementById('username').value;
-    setUsername(username);
-  }
 }
 
 const Index = (props) => {
