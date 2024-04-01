@@ -48,9 +48,9 @@ io.on('connection', (socket) => {
       const socketId = socket.id;
       socket.join(room);
       const rooms = Array.from(io.of("/").adapter.rooms);
-      console.log(`User '${socket.id}' has created a room: ${room}`);
+      console.log(`User '${socketId}' has created a room: ${room}`);
       console.log(`Number of rooms: ${rooms}`);
-      io.emit('create-room-event', (room));
+      io.emit('create-room-event', (room, socketId));
     } catch (error) {
       console.log(error);
     }

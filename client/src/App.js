@@ -40,11 +40,11 @@ function App() {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('create-room-event', (room) => {
+    socket.on('create-room-event', (room, socketId) => {
       setRooms((prev) => {
         return {
           ...prev,
-          [room]: []
+          [room]: [socketId]
         };
       });
     });
