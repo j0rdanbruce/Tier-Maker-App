@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
       const rooms = Array.from(io.of("/").adapter.rooms);
       console.log(`User '${socketId}' has created a room: ${room}`);
       console.log(`Number of rooms: ${rooms}`);
-      io.emit('create-room-event', (room, socketId));
+      io.emit('create-room-event', room, socketId);
     } catch (error) {
       console.log(error);
     }
