@@ -8,17 +8,25 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
+import { Link } from 'react-router-dom';
+
 const NavigationBar = (props) => {
 
   return (
     <Navbar expand="lg" className="navbar">
       <Container>
-        <Navbar.Brand href="#home">Tier Ranking</Navbar.Brand>
+        <Navbar.Brand>
+          <Link to="/">Tier Ranking</Link>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
+            <Nav.Link>
+              <Link to='/home'>Home</Link>
+            </Nav.Link>
+            <Nav.Link>
+              <Link to='/rank-session'>Rank Session</Link>
+            </Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Divider />
