@@ -55,6 +55,11 @@ io.on('connection', (socket) => {
       console.log(error);
     }
   });
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> f30469f (Attempted to fix merge conflicts.)
   socket.on('join-room-event', (roomName) => {
     const username = socket.id;
 
@@ -62,6 +67,10 @@ io.on('connection', (socket) => {
     console.log(`User '${username}' has joined room: ${roomName}`);
     io.emit('join-room-event', roomName, username);
   });
+<<<<<<< HEAD
+=======
+>>>>>>> 208fd53 (Created a new branch for joining rooms.)
+>>>>>>> f30469f (Attempted to fix merge conflicts.)
 });
 
 app.get('', (req, res) => {
