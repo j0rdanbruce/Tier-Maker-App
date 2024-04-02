@@ -55,6 +55,13 @@ io.on('connection', (socket) => {
       console.log(error);
     }
   });
+  socket.on('join-room-event', (roomName) => {
+    const username = socket.id;
+
+    socket.join(roomName);    //the user of the connected socket joins an active room session
+    console.log(`User '${username}' has joined room: ${roomName}`);
+    io.emit('join-room-event', roomName, username);
+  });
 });
 
 app.get('', (req, res) => {

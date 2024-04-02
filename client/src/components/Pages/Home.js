@@ -17,21 +17,45 @@ const ActiveRoom = (props) => {
     roomMembers
   } = props;
 
+  const activeRoomStlye = {
+    display: 'flex',
+    flexDirection: 'row',
+    maxWidth: 'fit-content',
+    margin: '15px auto'
+  }
+
   const cardStyle = {
     width: '700px',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0
+  }
+
+  const buttonStyle = {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0
+  }
+
+  const handleJoinRoomBtnClick = (event) => {
+    event.preventDefault();
+
+    socket.emit('join-room-event', (roomName));
   }
 
   return (
-    <Card style={cardStyle}>
-      <Card.Body>
-        <Card.Title>{roomName}</Card.Title>
-        <Card.Text>
-          Number of active users: {roomMembers.length}
-        </Card.Text>
-      </Card.Body>
-    </Card>
+    <div style={activeRoomStlye}>
+      <Card style={cardStyle}>
+        <Card.Body>
+          <Card.Title>{roomName}</Card.Title>
+          <Card.Text>
+            Number of active users: {roomMembers.length}
+          </Card.Text>
+          <p>{JSON.stringify(roomMembers)}</p>
+        </Card.Body>
+      </Card>
+      <Button style={buttonStyle} onClick={handleJoinRoomBtnClick}>
+        Join Room
+      </Button>
+    </div>
   );
 };
 
@@ -81,7 +105,6 @@ const Home = (props) => {
       <ActiveRoom roomName={roomName} roomMembers={roomMembers} />
     ));
     setActiveRooms(activeRooms);
-
   }, [rooms]);
 
   return (

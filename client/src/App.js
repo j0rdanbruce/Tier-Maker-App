@@ -48,6 +48,19 @@ function App() {
         };
       });
     });
+    socket.on('join-room-event', (roomName, username) => {
+      setRooms((prev) => {
+        const newRoomMembersArray = [
+          ...prev[roomName],
+          username
+        ]
+
+        return {
+          ...prev,
+          [roomName]: newRoomMembersArray
+        };
+      });
+    });
   });
 
   return (
