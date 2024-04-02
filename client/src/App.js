@@ -48,10 +48,6 @@ function App() {
         };
       });
     });
-<<<<<<< HEAD
-=======
-
->>>>>>> f30469f (Attempted to fix merge conflicts.)
     socket.on('join-room-event', (roomName, username) => {
       setRooms((prev) => {
         const newRoomMembersArray = [
